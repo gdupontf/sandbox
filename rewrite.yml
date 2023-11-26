@@ -1,0 +1,110 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.gdupontf.Opinionated
+recipeList:
+  - org.openrewrite.java.AddLicenseHeader:
+      licenseText: Copyright 2023 the original author or authors.
+        <p>
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+        <p>
+        https://www.apache.org/licenses/LICENSE-2.0
+        <p>
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.slf4j.Logger info(..)
+      removeToString: null
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger info(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger trace(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger debug(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger info(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger warn(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger error(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger fatal(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category info(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Logger trace(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category debug(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category info(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category warn(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category error(..)
+  - org.openrewrite.java.logging.ParameterizedLogging:
+      methodPattern: org.apache.logging.log4j.Category fatal(..)
+  - org.openrewrite.java.logging.SystemPrintToLogging:
+      addLogger: true
+      loggerName: log
+      loggingFramework: jul
+  - org.openrewrite.java.logging.slf4j.LoggersNamedForEnclosingClass
+  - org.openrewrite.java.logging.slf4j.ParameterizedLogging
+  - org.openrewrite.java.logging.slf4j.Slf4jLogShouldBeConstant
+  - org.openrewrite.java.logging.slf4j.CompleteExceptionLogging
+  - org.openrewrite.java.logging.slf4j.ParameterizedLogging
+  - org.openrewrite.java.migrate.UseJavaUtilBase64
+  - org.openrewrite.java.migrate.UpgradeToJava8
+  - org.openrewrite.java.migrate.Java8toJava11
+  - org.openrewrite.java.migrate.UpgradeToJava17
+  - org.openrewrite.java.migrate.UpgradeToJava21
+  - org.openrewrite.java.migrate.apache.commons.codec.ApacheBase64ToJavaBase64
+  - org.openrewrite.java.migrate.apache.commons.io.ApacheCommonsFileUtilsRecipes
+  - org.openrewrite.java.migrate.apache.commons.io.UseStandardCharsets
+  - org.openrewrite.java.migrate.apache.commons.io.UseSystemLineSeparator
+  - org.openrewrite.java.migrate.apache.commons.io.RelocateApacheCommonsIo
+  - org.openrewrite.java.migrate.apache.commons.io.ApacheIOUtilsUseExplicitCharset
+  - org.openrewrite.java.migrate.apache.commons.lang.ApacheCommonsStringUtilsRecipes
+  - org.openrewrite.java.migrate.guava.NoGuava
+  - org.openrewrite.java.migrate.guava.NoGuavaJava11
+  - org.openrewrite.java.migrate.guava.NoGuavaJava21
+  - org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta
+  - org.openrewrite.java.migrate.jakarta.JakartaEE10
+  - org.openrewrite.java.migrate.lombok.LombokValueToRecord
+  - org.openrewrite.java.migrate.lombok.LombokValToFinalVar
+  - org.openrewrite.java.migrate.maven.UseMavenCompilerPluginReleaseConfiguration
+  - org.openrewrite.java.migrate.maven.shared.MavenSharedStringUtilsRecipes
+  - org.openrewrite.java.migrate.io.ReplaceFileInOrOutputStreamFinalizeWithClose
+  - org.openrewrite.java.migrate.lang.StringFormatted
+  - org.openrewrite.java.migrate.lang.UseStringIsEmptyRecipe
+  - org.openrewrite.java.migrate.lang.StringRulesRecipes
+  - org.openrewrite.java.migrate.lang.JavaLangAPIs
+  - org.openrewrite.java.migrate.lang.UseTextBlocks:
+      convertStringsWithoutNewlines: false
+  - org.openrewrite.java.migrate.net.JavaNetAPIs
+  - org.openrewrite.java.migrate.sql.JavaSqlAPIs
+  - org.openrewrite.java.migrate.util.JavaUtilAPIs
+  - org.openrewrite.java.migrate.concurrent.JavaConcurrentAPIs
+  - org.openrewrite.java.migrate.logging.JavaLoggingAPIs
+  - org.openrewrite.java.migrate.javax.JavaxLangModelUtil
+  - org.openrewrite.java.migrate.javax.JavaxManagementMonitorAPIs
+  - org.openrewrite.java.migrate.javax.JavaxXmlStreamAPIs
+  - org.openrewrite.java.spring.PropertiesToKebabCase # SPRING
+  - org.openrewrite.java.spring.NoRequestMappingAnnotation
+  - org.openrewrite.java.spring.ImplicitWebAnnotationNames
+  - org.openrewrite.java.spring.BeanMethodsNotPublic
+  - org.openrewrite.java.spring.NoAutowiredOnConstructor
+  - org.openrewrite.java.spring.NoRepoAnnotationOnRepoInterface
+  - org.openrewrite.java.spring.SeparateApplicationYamlByProfile
+  - org.openrewrite.maven.RemoveDuplicateDependencies
+  - org.openrewrite.maven.RemoveRedundantDependencyVersions
+  - org.openrewrite.maven.cleanup.DependencyManagementDependencyRequiresVersion
+  - org.openrewrite.maven.BestPractices
+  - org.openrewrite.sql.FormatSql
+  - org.openrewrite.staticanalysis.CodeCleanup
+  - org.openrewrite.staticanalysis.CommonStaticAnalysis
+  - org.openrewrite.staticanalysis.ReplaceApacheCommonsLang3ValidateNotNullWithObjectsRequireNonNull # Deletes files ???
+  - org.openrewrite.staticanalysis.ReplaceValidateNotNullHavingSingleArgWithObjectsRequireNonNull # Deletes files ???
