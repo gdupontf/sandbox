@@ -11,16 +11,19 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    concurrency: ci-${{ github.ref }}
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
+#    - uses: webiny/action-conventional-commits@v1.2.0 # prevent builds without conventional commits?
+    - name: Increment version
+      id: increment-version
+      uses: RichardInnocent/semantic-versioning-maven@v0.1.0
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
@@ -32,8 +35,17 @@ jobs:
       # with:
       #   cache: npm
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      run: mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelog='' --file pom.xml
+    - name: Update pom.xml
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      run: mvnw org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion='${{ steps.increment-version.outputs.new-version }}'
+    - name: push
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      uses: github-actions-x/commit@v2.9
+      with:
+        push-branch: 'main'
+        commit-message: 'ci: Bump revision to ${{steps.increment-version.outputs.new-version}}'
+        files: pom.xml
+    - name: Submit Dependency Snapshot
+      uses: advanced-security/maven-dependency-submission-action@v3

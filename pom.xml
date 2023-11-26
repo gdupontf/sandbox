@@ -4,13 +4,16 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.gdupontf</groupId>
   <artifactId>sandbox</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${revision}${sha1}${changelist}</version>
   <name>sandbox</name>
   <description>A simple sandbox.</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+    <revision>0.0.1</revision>
+    <changelist>-SNAPSHOT</changelist>
+    <sha1/>
   </properties>
   <dependencies/>
   <build>
