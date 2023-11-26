@@ -47,5 +47,5 @@ jobs:
         push-branch: 'main'
         commit-message: 'ci: Bump revision to ${{steps.increment-version.outputs.new-version}}'
         files: pom.xml
-    - name: Submit Dependency Snapshot
-      uses: advanced-security/maven-dependency-submission-action@v3
+#    - name: Submit Dependency Snapshot
+#      uses: advanced-security/maven-dependency-submission-action@v3
