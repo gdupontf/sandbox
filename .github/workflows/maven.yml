@@ -29,8 +29,8 @@ jobs:
         cache: maven
     - name: Setup Node.js environment
       uses: actions/setup-node@v4.0.0
-      with:
-        cache: npm
+      # with:
+      #   cache: npm
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
