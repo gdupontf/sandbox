@@ -38,10 +38,10 @@ jobs:
       #   cache: npm
     - name: Build with Maven
       if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
-      run: mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelog='' --file pom.xml
+      run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelog='' --file pom.xml
     - name: Update pom.xml
       if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
-      run: mvnw org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion='${{ steps.increment-version.outputs.new-version }}'
+      run: ./mvnw org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion='${{ steps.increment-version.outputs.new-version }}'
     - name: push
       if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       uses: github-actions-x/commit@v2.9
