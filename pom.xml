@@ -16,6 +16,26 @@
     <sha1/>
   </properties>
   <dependencies/>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <changelist>-SNAPSHOT</changelist>
+      </properties>
+    </profile>
+    <profile>
+      <id>ci</id>
+      <activation>
+        <activeByDefault/>
+      </activation>
+      <properties>
+        <changelist/>
+      </properties>
+    </profile>
+  </profiles>
   <build>
     <pluginManagement>
       <!-- TODO: parent pom/bom -->
