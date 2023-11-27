@@ -46,6 +46,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Did linting pass?
-        run: "[[ $WAS_DIRTY = true ]] && exit 1"
+        if: ${{ env.WAS_DIRTY == 'true' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Repository was dirty after lint pass')
       - name: Build with Maven
         run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelist='-SNAPSHOT' --file pom.xml -P pr
