@@ -19,18 +19,12 @@
   <profiles>
     <profile>
       <id>local</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
       <properties>
         <changelist>-SNAPSHOT</changelist>
       </properties>
     </profile>
     <profile>
       <id>ci</id>
-      <activation>
-        <activeByDefault/>
-      </activation>
       <properties>
         <changelist/>
       </properties>
