@@ -38,7 +38,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "style: Apply linting rules"
-          git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${{ github.ref_name }}-lint --force
+          git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/${{ github.head_ref }}-lint --force
         shell: bash
       - name: Process lint changes
         if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
