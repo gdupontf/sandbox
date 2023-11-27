@@ -35,7 +35,7 @@ jobs:
           [[ $WAS_DIRTY = false ]] && exit 0
           git config --global user.name "github-actions"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout ${{ github.head_ref }}
+          git switch -c linting/${{ github.head_ref }}
           git add -A 
           git commit -m "style: Apply linting rules"
           git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/linting/${{ github.head_ref }} --force
