@@ -5,6 +5,9 @@ on:
 jobs:
   build-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - uses: webiny/action-conventional-commits@v1.2.0
@@ -28,9 +31,15 @@ jobs:
       - name: Check if there are style changes
         id: changes-spotless
         uses: UnicornGlobal/has-changes-action@v1.0.11
-      - uses: SOF3/octodiff@1.0.0
-        with:
-          token: ${{secrets.GH_TOKEN}}
+      - name: Push local changes
+        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style: Apply linting rules"
+          git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${{ github.ref_name }}-lint --force
+        shell: bash
       - name: Process lint changes
         if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
         uses: actions/github-script@v3
