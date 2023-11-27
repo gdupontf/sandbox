@@ -9,7 +9,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: webiny/action-conventional-commits@v1.2.0
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -23,14 +25,8 @@ jobs:
         #   cache: npm
       - name: Run OpenRewrite # TODO : open pr with all changes
         run: ./mvnw rewrite:run -P pr
-      - name: Check if there are refactored changes
-        id: changes-openrewrite
-        uses: UnicornGlobal/has-changes-action@v1.0.11
       - name: Run Spotless # TODO : open pr with all changes
         run: ./mvnw spotless:apply -P pr
-      - name: Check if there are style changes
-        id: changes-spotless
-        uses: UnicornGlobal/has-changes-action@v1.0.11
       - name: Push local changes if necessary
         run: |
           [[ -z $(git status -s) ]] && WAS_DIRTY=true
