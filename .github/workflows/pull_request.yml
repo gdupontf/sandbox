@@ -39,7 +39,7 @@ jobs:
           git add -A
           git commit -m "style: Apply linting rules"
           git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/linting/${{ github.head_ref }} --force
-          gh pr create -B ${{ github.head_ref }} -H ${{ github.head_ref }}-lint -b 'Adds required linting changes' -a ${{ github.event.pull_request.user.login }} -t 'Apply linting rules and refactorings for ${{ github.head_ref }}'
+          gh pr create -B ${{ github.head_ref }} -H linting/${{ github.head_ref }} -b 'Adds required linting changes' -a ${{ github.event.pull_request.user.login }} -t 'Apply linting rules and refactorings for ${{ github.head_ref }}'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
