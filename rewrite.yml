@@ -47,10 +47,10 @@ recipeList:
       methodPattern: org.apache.logging.log4j.Category error(..)
   - org.openrewrite.java.logging.ParameterizedLogging:
       methodPattern: org.apache.logging.log4j.Category fatal(..)
-#  - org.openrewrite.java.logging.SystemPrintToLogging:
-#      addLogger: true
-#      loggerName: log
-#      loggingFramework: JUL
+  #  - org.openrewrite.java.logging.SystemPrintToLogging:
+  #      addLogger: true
+  #      loggerName: log
+  #      loggingFramework: JUL
   - org.openrewrite.java.logging.slf4j.LoggersNamedForEnclosingClass
   - org.openrewrite.java.logging.slf4j.ParameterizedLogging
   - org.openrewrite.java.logging.slf4j.Slf4jLogShouldBeConstant
