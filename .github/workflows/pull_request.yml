@@ -32,14 +32,17 @@ jobs:
         id: changes-spotless
         uses: UnicornGlobal/has-changes-action@v1.0.11
       - name: Push local changes
-        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
+        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed == 1
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout ${{ github.head_ref }}
           git add -A
           git commit -m "style: Apply linting rules"
           git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/linting/${{ github.head_ref }} --force
+          set +e
           gh pr create -B ${{ github.head_ref }} -H linting/${{ github.head_ref }} -b 'Adds required linting changes' -a ${{ github.event.pull_request.user.login }} -t 'Apply linting rules and refactorings for ${{ github.head_ref }}'
+          set -e
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
