@@ -29,8 +29,8 @@ jobs:
         run: ./mvnw spotless:apply -P pr
       - name: Push local changes if necessary
         run: |
-          [[ -z $(git status -s) ]] && WAS_DIRTY=true
-          [[ -n $(git status -s) ]] && WAS_DIRTY=false
+          [[ -z $(git status -s) ]] && WAS_DIRTY=false
+          [[ -n $(git status -s) ]] && WAS_DIRTY=true
           echo "WAS_DIRTY=$WAS_DIRTY" >> "$GITHUB_ENV"
           [[ $WAS_DIRTY = false ]] && exit 0
           git config --global user.name "github-actions"
