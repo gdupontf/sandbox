@@ -23,19 +23,16 @@ jobs:
       - name: Check if there are refactored changes
         id: changes-openrewrite
         uses: UnicornGlobal/has-changes-action@v1.0.11
-      - name: Process refactoring changes
-        if: steps.changes-openrewrite.outputs.changed == 1
-        uses: actions/github-script@v3
-        with:
-          script: |
-            core.setFailed('Repository was dirty after refactoring pass')
       - name: Run Spotless # TODO : open pr with all changes
         run: ./mvnw spotless:apply -P pr
       - name: Check if there are style changes
         id: changes-spotless
         uses: UnicornGlobal/has-changes-action@v1.0.11
+      - uses: SOF3/octodiff@1.0.0
+        with:
+          token: ${{secrets.GH_TOKEN}}
       - name: Process lint changes
-        if: steps.changes-spotless.outputs.changed == 1
+        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
         uses: actions/github-script@v3
         with:
           script: |
