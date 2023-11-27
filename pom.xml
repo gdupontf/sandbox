@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.gdupontf</groupId>
   <artifactId>sandbox</artifactId>
-  <version>${revision}${sha1}${changelist}</version>
+  <version>0.0.2</version>
   <name>sandbox</name>
   <description>A simple sandbox.</description>
   <properties>
