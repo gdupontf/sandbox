@@ -22,7 +22,7 @@ jobs:
         # with:
         #   cache: npm
       - name: Run OpenRewrite # TODO : open pr with all changes
-        run: ./mvnw rewrite:run
+        run: ./mvnw rewrite:run -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelist='SNAPSHOT'
       - name: Check if there are refactored changes
         id: changes-openrewrite
         uses: UnicornGlobal/has-changes-action@v1.0.11
@@ -33,7 +33,7 @@ jobs:
           script: |
             core.setFailed('Repository was dirty after refactoring pass')
       - name: Run Spotless # TODO : open pr with all changes
-        run: ./mvnw spotless:apply
+        run: ./mvnw spotless:apply -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelist='SNAPSHOT'
       - name: Check if there are style changes
         id: changes-spotless
         uses: UnicornGlobal/has-changes-action@v1.0.11
@@ -44,4 +44,4 @@ jobs:
           script: |
             core.setFailed('Repository was dirty after lint pass')
       - name: Build with Maven
-        run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' --file pom.xml
+        run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelist='SNAPSHOT' --file pom.xml
