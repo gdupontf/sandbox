@@ -5,12 +5,12 @@ on:
 jobs:
   build-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - uses: webiny/action-conventional-commits@v1.2.0
-      - name: Increment version
-        id: increment-version
-        uses: RichardInnocent/semantic-versioning-maven@v0.1.0
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -22,26 +22,32 @@ jobs:
         # with:
         #   cache: npm
       - name: Run OpenRewrite # TODO : open pr with all changes
-        run: ./mvnw rewrite:run
+        run: ./mvnw rewrite:run -P pr
       - name: Check if there are refactored changes
         id: changes-openrewrite
         uses: UnicornGlobal/has-changes-action@v1.0.11
-      - name: Process refactoring changes
-        if: steps.changes-openrewrite.outputs.changed == 1
-        uses: actions/github-script@v3
-        with:
-          script: |
-            core.setFailed('Repository was dirty after refactoring pass')
       - name: Run Spotless # TODO : open pr with all changes
-        run: ./mvnw spotless:apply
+        run: ./mvnw spotless:apply -P pr
       - name: Check if there are style changes
         id: changes-spotless
         uses: UnicornGlobal/has-changes-action@v1.0.11
+      - name: Push local changes
+        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style: Apply linting rules"
+          git push "https://${GITHUB_ACTOR}:${{ env.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/linting/${{ github.head_ref }} --force
+          gh pr create -B ${{ github.head_ref }} -H linting/${{ github.head_ref }} -b 'Adds required linting changes' -a ${{ github.event.pull_request.user.login }} -t 'Apply linting rules and refactorings for ${{ github.head_ref }}'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Process lint changes
-        if: steps.changes-spotless.outputs.changed == 1
+        if: steps.changes-spotless.outputs.changed == 1 || steps.changes-openrewrite.outputs.changed
         uses: actions/github-script@v3
         with:
           script: |
             core.setFailed('Repository was dirty after lint pass')
       - name: Build with Maven
-        run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' --file pom.xml
+        run: ./mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelist='-SNAPSHOT' --file pom.xml -P pr
