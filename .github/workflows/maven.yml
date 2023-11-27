@@ -25,23 +25,25 @@ jobs:
       id: increment-version
       uses: RichardInnocent/semantic-versioning-maven@v0.1.0
     - name: Set up JDK 21
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       uses: actions/setup-java@v3
       with:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
     - name: Setup Node.js environment
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       uses: actions/setup-node@v4.0.0
       # with:
       #   cache: npm
     - name: Build with Maven
-      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       run: mvnw -B package -Drevision='${{ steps.increment-version.outputs.new-version }}' -Dchangelog='' --file pom.xml
     - name: Update pom.xml
-      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       run: mvnw org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion='${{ steps.increment-version.outputs.new-version }}'
     - name: push
-      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version
+      if: steps.increment-version.outputs.previous-version != steps.increment-version.outputs.new-version # skip anything build-related on unnecessary commits
       uses: github-actions-x/commit@v2.9
       with:
         push-branch: 'main'
