@@ -1,0 +1,10 @@
+= Project name
+
+== Local setup
+
+Setting up git hooks :
+
+[source,shell]
+----
+git config core.hooksPath './.hooks'
+----
